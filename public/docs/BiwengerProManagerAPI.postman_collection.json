@@ -1,0 +1,732 @@
+{
+	"info": {
+		"_postman_id": "d2eb6505-a10d-4185-bfee-ef442d384791",
+		"name": "BiwengerProManagerAPI",
+		"description": "Complete API collection for BiwengerProManagerAPI with all endpoints including V0 (public) and V1 (premium with API key)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22923785"
+	},
+	"item": [
+		{
+			"name": "V0 - Public Endpoints",
+			"item": [
+				{
+					"name": "Auth - Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v0/auth/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Authenticate user with email and password. Returns JWT token for further requests."
+					},
+					"response": []
+				},
+				{
+					"name": "Auth - Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v0/account",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"account"
+							]
+						},
+						"description": "Get current user account information."
+					},
+					"response": []
+				},
+				{
+					"name": "Leagues - List",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v0/leagues",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"leagues"
+							]
+						},
+						"description": "Get list of all leagues available to the authenticated user."
+					},
+					"response": []
+				},
+				{
+					"name": "League - Get by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v0/leagues/{{leagueId}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"leagues",
+								"{{leagueId}}"
+							]
+						},
+						"description": "Get detailed information about a specific league."
+					},
+					"response": []
+				},
+				{
+					"name": "Players - List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v0/players?competition={{competitionId}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"players"
+							],
+							"query": [
+								{
+									"key": "competition",
+									"value": "{{competitionId}}",
+									"description": "Competition ID (required)"
+								}
+							]
+						},
+						"description": "Get list of all players in a specific competition."
+					},
+					"response": []
+				},
+				{
+					"name": "Player - Get by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v0/players/{{playerId}}?competition={{competitionId}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"players",
+								"{{playerId}}"
+							],
+							"query": [
+								{
+									"key": "competition",
+									"value": "{{competitionId}}",
+									"description": "Competition ID (required)"
+								}
+							]
+						},
+						"description": "Get detailed information about a specific player."
+					},
+					"response": []
+				},
+				{
+					"name": "Users - List for League",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v0/users?league={{leagueId}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users"
+							],
+							"query": [
+								{
+									"key": "league",
+									"value": "{{leagueId}}",
+									"description": "League ID (required)"
+								}
+							]
+						},
+						"description": "Get list of users and their standings in a specific league."
+					},
+					"response": []
+				},
+				{
+					"name": "User - Get by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v0/users/{{userId}}?league={{leagueId}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"{{userId}}"
+							],
+							"query": [
+								{
+									"key": "league",
+									"value": "{{leagueId}}",
+									"description": "League ID (required)"
+								}
+							]
+						},
+						"description": "Get detailed information about a specific user in a league."
+					},
+					"response": []
+				},
+				{
+					"name": "User - Get Players",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v0/users/{{userId}}/players?league={{leagueId}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"{{userId}}",
+								"players"
+							],
+							"query": [
+								{
+									"key": "league",
+									"value": "{{leagueId}}",
+									"description": "League ID (optional)"
+								}
+							]
+						},
+						"description": "Get all players owned by a specific user."
+					},
+					"response": []
+				},
+				{
+					"name": "Users - Sync from API",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v0/users/sync?league={{leagueId}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"sync"
+							],
+							"query": [
+								{
+									"key": "league",
+									"value": "{{leagueId}}",
+									"description": "League ID (required)"
+								}
+							]
+						},
+						"description": "Synchronize users from Biwenger API to local database."
+					},
+					"response": []
+				},
+				{
+					"name": "Rounds - List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v0/rounds?league={{leagueId}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"rounds"
+							],
+							"query": [
+								{
+									"key": "league",
+									"value": "{{leagueId}}",
+									"description": "League ID (optional)"
+								}
+							]
+						},
+						"description": "Get list of rounds for a league."
+					},
+					"response": []
+				},
+				{
+					"name": "Rounds - Results",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v0/rounds/results?league={{leagueId}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"rounds",
+								"results"
+							],
+							"query": [
+								{
+									"key": "league",
+									"value": "{{leagueId}}",
+									"description": "League ID (optional)"
+								}
+							]
+						},
+						"description": "Get results for rounds in a league."
+					},
+					"response": []
+				}
+			],
+			"description": "Public endpoints that don't require API key. Some require Bearer token authentication."
+		},
+		{
+			"name": "V1 - Premium Endpoints (API Key Required)",
+			"item": [
+				{
+					"name": "Transfers - Execute",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-API-KEY",
+								"value": "{{API_KEY}}",
+								"description": "Required for premium endpoints"
+							},
+							{
+								"key": "X-League",
+								"value": "{{leagueId}}",
+								"description": "League context header"
+							},
+							{
+								"key": "X-User",
+								"value": "{{userId}}",
+								"description": "User context header"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"playerId\": {{playerId}},\n  \"fromUserId\": {{fromUserId}},\n  \"toUserId\": {{toUserId}},\n  \"price\": {{transferPrice}},\n  \"leagueId\": \"{{leagueId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/transfers",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transfers"
+							]
+						},
+						"description": "Execute a player transfer between users. Requires API key authentication."
+					},
+					"response": []
+				},
+				{
+					"name": "Clauses - Execute",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-API-KEY",
+								"value": "{{API_KEY}}",
+								"description": "Required for premium endpoints"
+							},
+							{
+								"key": "X-League",
+								"value": "{{leagueId}}",
+								"description": "League context header"
+							},
+							{
+								"key": "X-User",
+								"value": "{{userId}}",
+								"description": "User context header"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"playerId\": {{playerId}},\n  \"clauseType\": \"{{clauseType}}\",\n  \"amount\": {{clauseAmount}},\n  \"leagueId\": \"{{leagueId}}\",\n  \"fromUserId\": {{fromUserId}}\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/clauses",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"clauses"
+							]
+						},
+						"description": "Execute a clause (clausula) for a player. Requires API key authentication."
+					},
+					"response": []
+				},
+				{
+					"name": "League Settings - Get",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "{{API_KEY}}",
+								"description": "Required for premium endpoints"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/leagues/{{leagueId}}/settings",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"leagues",
+								"{{leagueId}}",
+								"settings"
+							]
+						},
+						"description": "Get current settings for a specific league. Requires API key authentication."
+					},
+					"response": []
+				},
+				{
+					"name": "League Settings - Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-API-KEY",
+								"value": "{{API_KEY}}",
+								"description": "Required for premium endpoints"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"clauses_value\": {{clausesValue}},\n  \"times_can_clause\": {{timesCanClause}},\n  \"max_times_claused\": {{maxTimesClaused}},\n  \"num_rounds_to_unlock\": {{numRoundsToUnlock}},\n  \"num_days_before_round\": {{numDaysBeforeRound}},\n  \"max_players_same_team\": {{maxPlayersSameTeam}}\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/leagues/{{leagueId}}/settings",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"leagues",
+								"{{leagueId}}",
+								"settings"
+							]
+						},
+						"description": "Update settings for a specific league. Only provided fields will be updated. Requires API key authentication."
+					},
+					"response": []
+				}
+			],
+			"description": "Premium endpoints that require both Bearer token and X-API-KEY header for authentication."
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "API_KEY",
+			"value": "changeme_local",
+			"description": "Premium API key required for V1 endpoints"
+		},
+		{
+			"key": "BASE_URL",
+			"value": "http://localhost:8080",
+			"description": "Base URL for the API server"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"description": "JWT Bearer token obtained from login endpoint"
+		},
+		{
+			"key": "email",
+			"value": "your-email@example.com",
+			"description": "User email for authentication"
+		},
+		{
+			"key": "password",
+			"value": "your-password",
+			"description": "User password for authentication"
+		},
+		{
+			"key": "leagueId",
+			"value": "1358641",
+			"description": "League ID for operations"
+		},
+		{
+			"key": "competitionId",
+			"value": "2",
+			"description": "Competition ID (e.g., 2 for La Liga)"
+		},
+		{
+			"key": "userId",
+			"value": "123456",
+			"description": "User ID for operations"
+		},
+		{
+			"key": "playerId",
+			"value": "34147",
+			"description": "Player ID for operations"
+		},
+		{
+			"key": "fromUserId",
+			"value": "123456",
+			"description": "Source user ID for transfers"
+		},
+		{
+			"key": "toUserId",
+			"value": "789012",
+			"description": "Target user ID for transfers"
+		},
+		{
+			"key": "transferPrice",
+			"value": "120",
+			"description": "Transfer price amount"
+		},
+		{
+			"key": "clauseType",
+			"value": "buyout",
+			"description": "Type of clause (e.g., buyout)"
+		},
+		{
+			"key": "clauseAmount",
+			"value": "200",
+			"description": "Clause amount"
+		},
+		{
+			"key": "clausesValue",
+			"value": "250",
+			"description": "League setting: clause value"
+		},
+		{
+			"key": "timesCanClause",
+			"value": "3",
+			"description": "League setting: times can clause"
+		},
+		{
+			"key": "maxTimesClaused",
+			"value": "2",
+			"description": "League setting: max times claused"
+		},
+		{
+			"key": "numRoundsToUnlock",
+			"value": "5",
+			"description": "League setting: rounds to unlock"
+		},
+		{
+			"key": "numDaysBeforeRound",
+			"value": "2",
+			"description": "League setting: days before round"
+		},
+		{
+			"key": "maxPlayersSameTeam",
+			"value": "5",
+			"description": "League setting: max players from same team"
+		}
+	]
+}

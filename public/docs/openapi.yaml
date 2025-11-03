@@ -1,0 +1,478 @@
+openapi: 3.0.3
+info:
+  title: BiwengerProManagerAPI
+  description: |
+    REST API wrapper for Biwenger functionality (leagues, players, users, rounds, transfers, clauses).
+    This OpenAPI describes v0 read endpoints and v1 operational endpoints used by the project.
+  version: '1.0.0'
+servers:
+  - url: http://bwpromanager.local
+    description: Local development server (XAMPP vhost)
+tags:
+  - name: auth
+  - name: leagues
+  - name: players
+  - name: users
+  - name: rounds
+  - name: transfers
+  - name: clauses
+paths:
+  /api/v0/auth/login:
+    post:
+      tags: [auth]
+      summary: Login and return Biwenger token (stateless)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Invalid payload
+        '401':
+          description: Bad credentials
+  /api/v0/auth/account:
+    get:
+      tags: [auth]
+      summary: Get account information (requires Bearer token)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Account information
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/StandardResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Account'
+        '401':
+          description: Invalid or missing Bearer token
+  /api/v0/leagues:
+    get:
+      tags: [leagues]
+      summary: List leagues
+      parameters: []
+      responses:
+        '200':
+          description: Leagues list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaguesResponse'
+  /api/v0/leagues/{id}:
+    get:
+      tags: [leagues]
+      summary: Get league by id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: League object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeagueResponse'
+  /api/v0/players:
+    get:
+      tags: [players]
+      summary: List players (optional filter by competition or league id)
+      parameters:
+        - in: query
+          name: league
+          schema:
+            type: string
+          description: Competition slug or league id to filter players
+      responses:
+        '200':
+          description: Players list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayersResponse'
+  /api/v0/users:
+    get:
+      tags: [users]
+      summary: List users (optional league filter)
+      parameters:
+        - in: query
+          name: league
+          schema:
+            type: string
+          description: League id or competition slug to filter
+      responses:
+        '200':
+          description: Users list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersResponse'
+  /api/v0/rounds:
+    get:
+      tags: [rounds]
+      summary: List rounds (optional league filter)
+      parameters:
+        - in: query
+          name: league
+          schema:
+            type: string
+          description: League id or competition slug
+      responses:
+        '200':
+          description: Rounds list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoundsResponse'
+  /api/v1/transfers:
+    post:
+      tags: [transfers]
+      summary: Execute a transfer
+      security:
+        - apiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferRequest'
+      responses:
+        '200':
+          description: Transfer result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransferResponse'
+        '400':
+          description: invalid payload
+        '401':
+          description: not authenticated
+  /api/v1/clauses:
+    post:
+      tags: [clauses]
+      summary: Execute a buyout clause
+      security:
+        - apiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClauseRequest'
+      responses:
+        '200':
+          description: Clause result and league settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClauseResponse'
+        '400':
+          description: invalid payload
+        '401':
+          description: not authenticated
+  /api/v1/leagues/{id}/settings:
+    get:
+      tags: [leagues]
+      summary: Get league settings
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Settings object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeagueSettingsWithId'
+    put:
+      tags: [leagues]
+      summary: Update league settings
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeagueSettings'
+      responses:
+        '200':
+          description: Updated settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: { type: string }
+                  settings: { $ref: '#/components/schemas/LeagueSettings' }
+components:
+  schemas:
+    StandardResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+        message:
+          type: string
+        data:
+          description: Response payload (type varies by endpoint)
+    LoginResponse:
+      allOf:
+        - $ref: '#/components/schemas/StandardResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                token:
+                  type: string
+    AuthRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+      required: [email, password]
+    Account:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Account unique identifier
+        name:
+          type: string
+          description: Account holder full name
+        email:
+          type: string
+          format: email
+          description: Account email address
+        phone:
+          type: string
+          description: Phone number
+        locale:
+          type: string
+          description: Language/locale preference
+        birthday:
+          type: integer
+          description: Birthday in YYYYMMDD format
+        status:
+          type: string
+          description: Account status
+        credits:
+          type: integer
+          description: Available credits
+        created:
+          type: integer
+          description: Account creation timestamp
+        newsletter:
+          type: boolean
+          description: Newsletter subscription status
+        unreadMessages:
+          type: boolean
+          description: Has unread messages
+        lastAccess:
+          type: integer
+          description: Last access timestamp
+        source:
+          type: string
+          nullable: true
+          description: Account registration source
+        devices:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              token:
+                type: string
+              updated:
+                type: integer
+          description: Registered devices for notifications
+    League:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        competition:
+          type: string
+    LeaguesResponse:
+      allOf:
+        - $ref: '#/components/schemas/StandardResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/League'
+    LeagueResponse:
+      allOf:
+        - $ref: '#/components/schemas/StandardResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/League'
+    LeagueSettings:
+      type: object
+      properties:
+        clauses_value:
+          type: integer
+        times_can_clause:
+          type: integer
+        max_times_claused:
+          type: integer
+        num_rounds_to_unlock:
+          type: integer
+        num_days_before_round:
+          type: integer
+        max_players_same_team:
+          type: integer
+    LeagueSettingsWithId:
+      allOf:
+        - $ref: '#/components/schemas/LeagueSettings'
+        - type: object
+          properties:
+            id:
+              type: integer
+    Player:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        team: { type: string }
+        position: { type: string }
+        value: { type: integer }
+        points: { type: integer }
+    PlayersResponse:
+      allOf:
+        - $ref: '#/components/schemas/StandardResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/Player'
+    User:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        players:
+          type: array
+          items:
+            $ref: '#/components/schemas/Player'
+        playersPerTeam:
+          type: object
+          additionalProperties:
+            type: integer
+        nmClausesDone:
+          type: integer
+        nmTimesBeingClaused:
+          type: integer
+    UsersResponse:
+      allOf:
+        - $ref: '#/components/schemas/StandardResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/User'
+    Round:
+      type: object
+      properties:
+        id: { type: integer }
+        start_date: { type: string, format: date }
+        end_date: { type: string, format: date }
+        locked: { type: boolean }
+    RoundsResponse:
+      allOf:
+        - $ref: '#/components/schemas/StandardResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/Round'
+    TransferRequest:
+      type: object
+      properties:
+        playerId: { type: integer }
+        fromUserId: { type: integer }
+        toUserId: { type: integer }
+        price: { type: integer }
+        leagueId: { type: string }
+      required: [playerId, fromUserId, toUserId, leagueId]
+    TransferResponse:
+      allOf:
+        - $ref: '#/components/schemas/StandardResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                message: { type: string }
+                transfer:
+                  type: object
+    ClauseRequest:
+      type: object
+      properties:
+        playerId: { type: integer }
+        clauseType: { type: string }
+        amount: { type: integer }
+        leagueId: { type: string }
+      required: [playerId, clauseType, amount, leagueId]
+    ClauseResponse:
+      allOf:
+        - $ref: '#/components/schemas/StandardResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                result:
+                  type: object
+                settings:
+                  $ref: '#/components/schemas/LeagueSettings'
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY

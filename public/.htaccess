@@ -1,0 +1,24 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Ensure the rewrite base is the site root
+    RewriteBase /
+
+    # Fix Authorization header for Apache (required for Bearer tokens)
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Don't rewrite existing files or directories
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Rewrite everything else to index.php (front controller)
+    RewriteRule ^ index.php [L,QSA]
+</IfModule>
+
+# Fallback for servers without mod_rewrite: try PATH_INFO on index.php
+<IfModule !mod_rewrite.c>
+    <Files "index.php">
+        AcceptPathInfo On
+    </Files>
+</IfModule>

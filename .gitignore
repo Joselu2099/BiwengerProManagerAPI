@@ -1,6 +1,40 @@
+# Composer
 composer.phar
+
+# Dependencies
 /vendor/
 
-# Commit your application's lock file https://getcomposer.org/doc/01-basic-usage.md#commit-your-composer-lock-file-to-version-control
-# You may choose to ignore a library lock file http://getcomposer.org/doc/02-libraries.md#lock-file
+# Environment / secrets
+# Ignore local env files (keep examples in repo)
+.env
+
+# Local runtime / caches / generated files
+/data/
+*.db
+# SQLite ignored patterns removed: project uses MongoDB by default
+.phpunit.result.cache
+phpunit.xml.cache
+
+# Logs
+*.log
+logs/
+
+# IDEs and editors
+/.idea/
+.vscode/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Node
+node_modules/
+
+# Misc
+*.phar
+
+# Keep composer.lock in VCS (recommended) — uncomment if you prefer to ignore it
 # composer.lock

@@ -1,2 +1,25 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Force LF for source files to avoid mixed EOL issues across platforms
+*.php text eol=lf
+*.inc text eol=lf
+*.phtml text eol=lf
+*.js text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+*.html text eol=lf
+*.md text eol=lf
+
+# PowerShell scripts should keep CRLF on Windows but normalized in repo
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+
+# Mark vendor and built archives as binary to avoid diffing
+/vendor/** binary
+*.phar binary
+
+# Don't include generated docs or vendor in exported archives
+composer.lock export-ignore
+/vendor/ export-ignore
+/.idea/ export-ignore
