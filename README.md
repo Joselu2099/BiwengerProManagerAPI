@@ -10,10 +10,10 @@ The documentation is organized into **4 main guides** that cover everything need
 
 | Document | Description | Audience |
 |----------|-------------|----------|
-| **[01 - Installation Guide](01-installation-guide.md)** | Complete project setup from scratch | Developers, DevOps |
-| **[02 - API Usage Guide](02-api-usage-guide.md)** | Endpoints, authentication, and usage examples | Frontend/Backend Developers |
-| **[03 - Data Model](03-data-model.md)** | MongoDB structure and data models | Backend Developers, DBAs |
-| **[04 - Testing Tools](04-testing-tools.md)** | Postman, OpenAPI, PHPUnit, and validation | QA, Developers |
+| **[01 - Installation Guide](public/docs/01-installation-guide.md)** | Complete project setup from scratch | Developers, DevOps |
+| **[02 - API Usage Guide](public/docs/02-api-usage-guide.md)** | Endpoints, authentication, and usage examples | Frontend/Backend Developers |
+| **[03 - Data Model](public/docs/03-data-model.md)** | MongoDB structure and data models | Backend Developers, DBAs |
+| **[04 - Testing Tools](public/docs/04-testing-tools.md)** | Postman, OpenAPI, PHPUnit, and validation | QA, Developers |
 
 ### 🔧 Configuration Files
 
@@ -27,16 +27,16 @@ The documentation is organized into **4 main guides** that cover everything need
 
 ### For New Users
 
-1. **📥 Installation**: Start with the [Installation Guide](01-installation-guide.md)
+1. **📥 Installation**: Start with the [Installation Guide](public/docs/01-installation-guide.md)
 2. **🔧 Configuration**: Follow MongoDB and web server configuration steps
 3. **🧪 Validation**: Run tests to verify everything works
 4. **📮 Testing**: Import Postman files to test the API
 
 ### For Developers
 
-1. **📖 API**: Review the [API Usage Guide](02-api-usage-guide.md) to understand endpoints
-2. **🗄️ Data**: Check the [Data Model](03-data-model.md) to understand the structure
-3. **🧪 Testing**: Use the [Testing Tools](04-testing-tools.md) to validate changes
+1. **📖 API**: Review the [API Usage Guide](public/docs/02-api-usage-guide.md) to understand endpoints
+2. **🗄️ Data**: Check the [Data Model](public/docs/03-data-model.md) to understand the structure
+3. **🧪 Testing**: Use the [Testing Tools](public/docs/04-testing-tools.md) to validate changes
 4. **🔧 Integration**: Implement clients using code examples
 
 ## 🎯 Key Features
@@ -89,28 +89,28 @@ BiwengerProManagerAPI/
 ## 🔗 Quick Links
 
 ### 🛠️ For System Administrators
-- [System Requirements](01-installation-guide.md#-system-requirements)
-- [MongoDB Configuration](01-installation-guide.md#mongodb-configuration)
-- [Web Server Configuration](01-installation-guide.md#web-server-configuration)
-- [Production Deployment](01-installation-guide.md#production-deployment)
+- [System Requirements](public/docs/01-installation-guide.md#-system-requirements)
+- [MongoDB Configuration](public/docs/01-installation-guide.md#mongodb-configuration)
+- [Web Server Configuration](public/docs/01-installation-guide.md#web-server-configuration)
+- [Production Deployment](public/docs/01-installation-guide.md#production-deployment)
 
 ### 👨‍💻 For Backend Developers
-- [V0 Endpoints - Public](02-api-usage-guide.md#v0-endpoints---public)
-- [V1 Endpoints - Premium](02-api-usage-guide.md#v1-endpoints---premium-require-api-key)
-- [Authentication and Authorization](02-api-usage-guide.md#authentication-and-authorization)
-- [MongoDB Structure](03-data-model.md#mongodb-collections)
+- [V0 Endpoints - Public](public/docs/02-api-usage-guide.md#v0-endpoints---public)
+- [V1 Endpoints - Premium](public/docs/02-api-usage-guide.md#v1-endpoints---premium-require-api-key)
+- [Authentication and Authorization](public/docs/02-api-usage-guide.md#authentication-and-authorization)
+- [MongoDB Structure](public/docs/03-data-model.md#mongodb-collections)
 
 ### 🎨 For Frontend Developers
-- [Authentication Flow](02-api-usage-guide.md#authentication-flow)
-- [Usage Examples](02-api-usage-guide.md#usage-examples)
-- [HTTP Response Codes](02-api-usage-guide.md#http-response-codes)
-- [Application Integration](02-api-usage-guide.md#application-integration)
+- [Authentication Flow](public/docs/02-api-usage-guide.md#authentication-flow)
+- [Usage Examples](public/docs/02-api-usage-guide.md#usage-examples)
+- [HTTP Response Codes](public/docs/02-api-usage-guide.md#http-response-codes)
+- [Application Integration](public/docs/02-api-usage-guide.md#application-integration)
 
 ### 🧪 For QA and Testing
-- [Postman Configuration](04-testing-tools.md#postman-testing)
-- [PHPUnit Automated Tests](04-testing-tools.md#phpunit-test-suite)
-- [OpenAPI Specification](04-testing-tools.md#openapi-specification)
-- [Continuous Integration Tools](04-testing-tools.md#continuous-integration)
+- [Postman Configuration](public/docs/04-testing-tools.md#postman-testing)
+- [PHPUnit Automated Tests](public/docs/04-testing-tools.md#phpunit-test-suite)
+- [OpenAPI Specification](public/docs/04-testing-tools.md#openapi-specification)
+- [Continuous Integration Tools](public/docs/04-testing-tools.md#continuous-integration)
 
 ## 🆘 Support and Contribution
 
@@ -164,4 +164,4 @@ BiwengerProManagerAPI/
 
 ---
 
-**Start your journey with BiwengerProManagerAPI by following the [Installation Guide](01-installation-guide.md)!** 🚀
+**Start your journey with BiwengerProManagerAPI by following the [Installation Guide](public/docs/01-installation-guide.md)!** 🚀
