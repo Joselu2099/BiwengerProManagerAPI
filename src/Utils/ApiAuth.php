@@ -55,6 +55,9 @@ class ApiAuth
         if (empty($token)) {
             Logger::error('ApiAuth: missing bearer token in request');
             Response::error('authorization token required', 401);
+            if (defined('PHPUNIT_COMPOSER_INSTALL') || defined('__PHPUNIT_PHAR__') || getenv('APP_ENV') === 'testing') {
+                throw new \Exception('authorization token required');
+            }
             exit;
         }
         return $token;
@@ -106,6 +109,9 @@ class ApiAuth
             Logger::error('ApiAuth: unauthorized access attempt via API key');
             Response::error('Unauthorized: invalid API key', 401);
             // Stop execution
+            if (defined('PHPUNIT_COMPOSER_INSTALL') || defined('__PHPUNIT_PHAR__') || getenv('APP_ENV') === 'testing') {
+                throw new \Exception('Unauthorized: invalid API key');
+            }
             exit;
         }
     }
