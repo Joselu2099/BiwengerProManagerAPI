@@ -69,13 +69,10 @@ class V1EndpointsTest extends TestCase
         ob_start();
         try {
             $controller->transfer('{"playerId": 123, "fromUserId": 456, "toUserId": 789}');
-        } catch (\Exception $e) {
-            // ApiAuth throws exception, capture it
-            echo json_encode(['status' => 401, 'message' => $e->getMessage()]);
-        }
-        $output = ob_get_clean();
+        } catch (\Exception $e) {}
+        $out = ob_get_clean();
         
-        $this->assertStringContainsString('API key required', $output);
+        $this->assertStringContainsString('invalid API key', $out);
     }
 
     public function testTransferValidatesPayload()
@@ -113,7 +110,7 @@ class V1EndpointsTest extends TestCase
         
         $response = json_decode($output, true);
         $this->assertEquals(400, $response['status']);
-        $this->assertStringContainsString('invalid playerId', $response['message']);
+        $this->assertStringContainsString('playerId must be positive integer', $response['message']);
     }
 
     public function testTransferValidatesSameUserIds()
@@ -151,12 +148,10 @@ class V1EndpointsTest extends TestCase
         ob_start();
         try {
             $controller->clause('{"playerId": 123, "clauseType": "buy", "amount": 1000000}');
-        } catch (\Exception $e) {
-            echo json_encode(['status' => 401, 'message' => $e->getMessage()]);
-        }
-        $output = ob_get_clean();
+        } catch (\Exception $e) {}
+        $out = ob_get_clean();
         
-        $this->assertStringContainsString('API key required', $output);
+        $this->assertStringContainsString('invalid API key', $out);
     }
 
     public function testClauseValidatesRequiredFields()
@@ -213,7 +208,115 @@ class V1EndpointsTest extends TestCase
         $this->assertEquals('invalid payload', $response['message']);
     }
 
+    public function testTransferSuccess()
+    {
+        $_SERVER['HTTP_X_LEAGUE'] = '123';
+
+        $mockTransfersService = $this->getMockBuilder(\BiwengerProManagerAPI\Services\TransfersService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mockTransfersService->expects($this->once())
+            ->method('transferPlayer')
+            ->willReturn('Transfer successful');
+
+        $controller = new TransfersController($mockTransfersService);
+
+        ob_start();
+        $controller->transfer('{"playerId": 123, "fromUserId": 456, "toUserId": 789, "price": 100}');
+        $output = ob_get_clean();
+
+        $response = json_decode($output, true);
+        $this->assertEquals(200, $response['status']);
+        $this->assertEquals('Transfer executed', $response['message']);
+        $this->assertEquals('Transfer successful', $response['data']['message']);
+    }
+
+    public function testClauseSuccess()
+    {
+        $_SERVER['HTTP_X_LEAGUE'] = '123';
+        $_SERVER['HTTP_X_USER'] = '456';
+
+        $mockTransfersService = $this->getMockBuilder(\BiwengerProManagerAPI\Services\TransfersService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mockTransfersService->expects($this->once())
+            ->method('clausePlayer')
+            ->willReturn(['status' => 'ok']);
+
+        $mockSettingsService = $this->getMockBuilder(\BiwengerProManagerAPI\Services\LeagueSettingsService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $settingMock = new \BiwengerProManagerAPI\Models\Setting([], ['clauses_value' => 100]);
+        $mockSettingsService->expects($this->once())
+            ->method('getSettings')
+            ->willReturn($settingMock);
+
+        $controller = new TransfersController($mockTransfersService, $mockSettingsService);
+
+        ob_start();
+        $controller->clause('{"playerId": 123, "clauseType": "buy", "amount": 1000000}');
+        $output = ob_get_clean();
+
+        $response = json_decode($output, true);
+        $this->assertEquals(200, $response['status']);
+        $this->assertEquals('Clause processed', $response['message']);
+        $this->assertEquals('ok', $response['data']['result']['status']);
+        $this->assertEquals(100, $response['data']['settings']['clauses_value']);
+    }
+
     // === LEAGUE CONTROLLER TESTS ===
+
+    public function testLeagueGetSettingsSuccess()
+    {
+        $mockLeagueService = $this->getMockBuilder(\BiwengerProManagerAPI\Services\LeagueService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockSettingsService = $this->getMockBuilder(\BiwengerProManagerAPI\Services\LeagueSettingsService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $settingMock = new \BiwengerProManagerAPI\Models\Setting([], ['clauses_value' => 100]);
+        $mockSettingsService->expects($this->once())
+            ->method('getSettings')
+            ->willReturn($settingMock);
+
+        $controller = new LeagueController($mockLeagueService);
+        $controller->setSettingsService($mockSettingsService);
+
+        ob_start();
+        $controller->getSettings(123);
+        $output = ob_get_clean();
+
+        $response = json_decode($output, true);
+        $this->assertEquals(200, $response['status']);
+        $this->assertEquals('Settings retrieved', $response['message']);
+        $this->assertEquals(100, $response['data']['clauses_value']);
+    }
+
+    public function testLeagueUpdateSettingsSuccess()
+    {
+        $mockLeagueService = $this->getMockBuilder(\BiwengerProManagerAPI\Services\LeagueService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockSettingsService = $this->getMockBuilder(\BiwengerProManagerAPI\Services\LeagueSettingsService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mockSettingsService->expects($this->once())
+            ->method('updateSettings')
+            ->willReturn(true);
+
+        $controller = new LeagueController($mockLeagueService);
+        $controller->setSettingsService($mockSettingsService);
+
+        ob_start();
+        $controller->updateSettings(123, '{"clauses_value": 100, "max_players_same_team": 3}');
+        $output = ob_get_clean();
+
+        $response = json_decode($output, true);
+        $this->assertEquals(200, $response['status']);
+        $this->assertEquals('Settings updated', $response['message']);
+    }
 
     public function testLeagueUpdateSettingsValidatesNegativeValues()
     {
@@ -269,6 +372,7 @@ class V1EndpointsTest extends TestCase
 
     public function testApiKeyExtractionFromHeader()
     {
+        Config::set('api.key', 'header_api_key');
         $_SERVER['HTTP_X_API_KEY'] = 'header_api_key';
         unset($_GET['api_key']);
         

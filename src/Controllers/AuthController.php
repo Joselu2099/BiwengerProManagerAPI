@@ -19,6 +19,24 @@ class AuthController
     }
 
     /**
+     * POST /api/v0/auth/token
+     * API version: v0 (public) - no API_KEY required
+     * Sets the token directly. Accept optional $rawInput for testing.
+     */
+    public function setToken(string $rawInput = null)
+    {
+        $body = json_decode($rawInput ?? file_get_contents('php://input'), true);
+        if (!isset($body['token'])) {
+            Response::error('token required', 400);
+            return;
+        }
+
+        // Just an endpoint to acknowledge the token is received, backward compatibility
+        // The token is actually passed in Authorization header for endpoints.
+        Response::json(['status' => 200, 'message' => 'token set', 'data' => ['token' => $body['token']]], 200);
+    }
+
+    /**
      * POST /api/v0/auth/login
      * API version: v0 (public) - no API_KEY required
      * Accept optional $rawInput for testing to avoid relying on php://input
